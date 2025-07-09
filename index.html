@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        max-width: 600px;
+        margin: auto;
+      }
+      h2 { color: #4CAF50; }
+      input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Form Penjurian</h2>
+    <form method="post" action="<?= ScriptApp.getService().getUrl() ?>">
+      <label for="nama">Nama Juri:</label>
+      <input type="text" id="nama" name="nama" required>
+
+      <label for="kategori">Kategori:</label>
+      <select id="kategori" name="kategori" required>
+        <option value="Desain">Desain</option>
+        <option value="Inovasi">Inovasi</option>
+        <option value="Teknologi">Teknologi</option>
+      </select>
+
+      <label>Kriteria 1:</label>
+      <input type="number" name="k1" min="1" max="10" required>
+
+      <label>Kriteria 2:</label>
+      <input type="number" name="k2" min="1" max="10" required>
+
+      <label>Kriteria 3:</label>
+      <input type="number" name="k3" min="1" max="10" required>
+
+      <label>Kriteria 4:</label>
+      <input type="number" name="k4" min="1" max="10" required>
+
+      <label>Kriteria 5:</label>
+      <input type="number" name="k5" min="1" max="10" required>
+
+      <label>Catatan:</label>
+      <textarea name="catatan" rows="4"></textarea>
+
+      <button type="submit">Kirim Penilaian</button>
+    </form>
+  </body>
+</html>
