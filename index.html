@@ -11,7 +11,7 @@
       padding: 40px;
     }
     .container {
-      max-width: 600px;
+      max-width: 700px;
       background: white;
       padding: 30px 40px;
       margin: auto;
@@ -33,6 +33,14 @@
       margin-top: 4px;
       border-radius: 8px;
       border: 1px solid #ccc;
+    }
+    .checkbox-group {
+      margin-top: 8px;
+    }
+    .checkbox-group label {
+      display: inline-block;
+      margin-right: 15px;
+      font-weight: normal;
     }
     button {
       margin-top: 20px;
@@ -64,11 +72,6 @@
       font-weight: bold;
       display: none;
       z-index: 9999;
-      animation: fadein 0.3s ease-out;
-    }
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -91,54 +94,44 @@
         <option value="">-- Pilih Tim --</option>
       </select>
 
-      <!-- Penilaian -->
+      <!-- Kriteria dengan checkbox -->
       <label>Presentasi:</label>
-      <select name="presentasi" required>
-        <option value="">Pilih Nilai</option>
-        <option value="10">Sangat Baik (10)</option>
-        <option value="9">Baik (9)</option>
-        <option value="8">Cukup (8)</option>
-        <option value="7">Kurang (7)</option>
-      </select>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="presentasi" value="10" required> Sangat Baik (10)</label>
+        <label><input type="checkbox" name="presentasi" value="9"> Baik (9)</label>
+        <label><input type="checkbox" name="presentasi" value="8"> Cukup (8)</label>
+        <label><input type="checkbox" name="presentasi" value="7"> Kurang (7)</label>
+      </div>
 
       <label>Peningkatan Revenue / Efisiensi / Produktivitas:</label>
-      <select name="revenue" required>
-        <option value="">Pilih Nilai</option>
-        <option value="10">Sangat Baik (10)</option>
-        <option value="9">Baik (9)</option>
-        <option value="8">Cukup (8)</option>
-        <option value="7">Kurang (7)</option>
-      </select>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="revenue" value="10" required> Sangat Baik (10)</label>
+        <label><input type="checkbox" name="revenue" value="9"> Baik (9)</label>
+        <label><input type="checkbox" name="revenue" value="8"> Cukup (8)</label>
+        <label><input type="checkbox" name="revenue" value="7"> Kurang (7)</label>
+      </div>
 
       <label>Pemanfaatan Digitalisasi:</label>
-      <select name="digital" required>
-        <option value="">Pilih Nilai</option>
-        <option value="10">Sangat Baik (10)</option>
-        <option value="9">Baik (9)</option>
-        <option value="8">Cukup (8)</option>
-        <option value="7">Kurang (7)</option>
-      </select>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="digital" value="10" required> Sangat Baik (10)</label>
+        <label><input type="checkbox" name="digital" value="9"> Baik (9)</label>
+        <label><input type="checkbox" name="digital" value="8"> Cukup (8)</label>
+        <label><input type="checkbox" name="digital" value="7"> Kurang (7)</label>
+      </div>
 
       <label>Keberlanjutan Inovasi:</label>
-      <select name="keberlanjutan" required>
-        <option value="">Pilih Nilai</option>
-        <option value="10">Sangat Baik (10)</option>
-        <option value="9">Baik (9)</option>
-        <option value="8">Cukup (8)</option>
-        <option value="7">Kurang (7)</option>
-      </select>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="keberlanjutan" value="10" required> Sangat Baik (10)</label>
+        <label><input type="checkbox" name="keberlanjutan" value="9"> Baik (9)</label>
+        <label><input type="checkbox" name="keberlanjutan" value="8"> Cukup (8)</label>
+        <label><input type="checkbox" name="keberlanjutan" value="7"> Kurang (7)</label>
+      </div>
 
       <label>Overall Score:</label>
-      <select name="overall" required>
-        <option value="">Pilih Nilai</option>
-        <option value="10">Sangat Baik (10)</option>
-        <option value="9">Baik (9)</option>
-        <option value="8">Cukup (8)</option>
-        <option value="7">Kurang (7)</option>
-      </select>
+      <input type="text" name="overall" id="overall" readonly style="background:#eee;" />
 
       <label>Catatan:</label>
-      <textarea name="catatan" rows="4"></textarea>
+      <textarea name="catatan" rows="3"></textarea>
 
       <button type="submit" id="submit-btn">📤 Kirim</button>
     </form>
@@ -155,13 +148,14 @@
     const submitBtn = document.getElementById('submit-btn');
     const kategoriSelect = document.getElementById('kategori');
     const timSelect = document.getElementById('tim');
+    const overallInput = document.getElementById('overall');
 
-    // Update daftar tim sesuai kategori
+    // Tim dinamis berdasarkan kategori
     kategoriSelect.addEventListener('change', function () {
       const kategori = this.value;
       timSelect.innerHTML = '<option value="">-- Pilih Tim --</option>';
-
       let tims = [];
+
       if (kategori === 'Innovation Project Rekind') {
         tims = ['Tim Innovation Project Rekind 1', 'Tim Innovation Project Rekind 2', 'Tim Innovation Project Rekind 3'];
       } else if (kategori === 'Innovation Project Anper') {
@@ -176,11 +170,40 @@
       });
     });
 
-    // Handle submit
+    // Batasi 1 checkbox per kriteria
+    ['presentasi', 'revenue', 'digital', 'keberlanjutan'].forEach(name => {
+      const boxes = document.querySelectorAll(`input[name="${name}"]`);
+      boxes.forEach(box => {
+        box.addEventListener('change', () => {
+          if (box.checked) {
+            boxes.forEach(b => { if (b !== box) b.checked = false; });
+            updateOverall();
+          } else {
+            overallInput.value = '';
+          }
+        });
+      });
+    });
+
+    // Hitung overall
+    function updateOverall() {
+      let total = 0;
+      let count = 0;
+      ['presentasi', 'revenue', 'digital', 'keberlanjutan'].forEach(name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        if (checked) {
+          total += parseInt(checked.value);
+          count++;
+        }
+      });
+      if (count === 4) overallInput.value = (total / 4).toFixed(1);
+    }
+
+    // Submit form
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       const data = new FormData(form);
-      const url = "https://script.google.com/macros/s/AKfycbwBr-WA7ZfrZiwl9aRLXt5sRqT9iy2c1WcBbcAvk1P9bI68mslLu3DqbaWbZRFZpGH4/exec"; // GANTI dgn URL milikmu
+      const url = "https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxx/exec"; // Ganti dengan URL milikmu
 
       submitBtn.disabled = true;
       submitBtn.textContent = "⏳ Mengirim...";
@@ -194,9 +217,10 @@
 
         form.reset();
         timSelect.innerHTML = '<option value="">-- Pilih Tim --</option>';
+        overallInput.value = '';
 
         popup.style.display = "block";
-        setTimeout(() => { popup.style.display = "none"; }, 4000);
+        setTimeout(() => popup.style.display = "none", 4000);
 
       } catch (err) {
         alert("Gagal mengirim data. Coba lagi.\n\n" + err.message);
