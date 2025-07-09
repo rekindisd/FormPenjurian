@@ -52,8 +52,6 @@
       background-color: #a5d6a7;
       cursor: not-allowed;
     }
-
-    /* Popup notification */
     .popup-success {
       position: fixed;
       top: 20px;
@@ -68,7 +66,6 @@
       z-index: 9999;
       animation: fadein 0.3s ease-out;
     }
-
     @keyframes fadein {
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -83,47 +80,61 @@
       <input type="text" name="nama" required />
 
       <label>Kategori:</label>
-      <select name="kategori" required>
+      <select name="kategori" id="kategori" required>
         <option value="">-- Pilih Kategori --</option>
-        <option value="Desain">Desain</option>
-        <option value="Inovasi">Inovasi</option>
-        <option value="Teknologi">Teknologi</option>
+        <option value="Innovation Project Rekind">Innovation Project Rekind</option>
+        <option value="Innovation Project Anper">Innovation Project Anper</option>
       </select>
 
-      <!-- Kriteria -->
-      <label>Nilai Kriteria 1 (10–100):</label>
-      <select name="k1" required>
-        <option value="">Pilih Nilai</option>
-        <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
-        <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
+      <label>Tim:</label>
+      <select name="tim" id="tim" required>
+        <option value="">-- Pilih Tim --</option>
       </select>
 
-      <label>Nilai Kriteria 2 (10–100):</label>
-      <select name="k2" required>
+      <!-- Penilaian -->
+      <label>Presentasi:</label>
+      <select name="presentasi" required>
         <option value="">Pilih Nilai</option>
-        <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
-        <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
+        <option value="10">Sangat Baik (10)</option>
+        <option value="9">Baik (9)</option>
+        <option value="8">Cukup (8)</option>
+        <option value="7">Kurang (7)</option>
       </select>
 
-      <label>Nilai Kriteria 3 (10–100):</label>
-      <select name="k3" required>
+      <label>Peningkatan Revenue / Efisiensi / Produktivitas:</label>
+      <select name="revenue" required>
         <option value="">Pilih Nilai</option>
-        <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
-        <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
+        <option value="10">Sangat Baik (10)</option>
+        <option value="9">Baik (9)</option>
+        <option value="8">Cukup (8)</option>
+        <option value="7">Kurang (7)</option>
       </select>
 
-      <label>Nilai Kriteria 4 (10–100):</label>
-      <select name="k4" required>
+      <label>Pemanfaatan Digitalisasi:</label>
+      <select name="digital" required>
         <option value="">Pilih Nilai</option>
-        <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
-        <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
+        <option value="10">Sangat Baik (10)</option>
+        <option value="9">Baik (9)</option>
+        <option value="8">Cukup (8)</option>
+        <option value="7">Kurang (7)</option>
       </select>
 
-      <label>Nilai Kriteria 5 (10–100):</label>
-      <select name="k5" required>
+      <label>Keberlanjutan Inovasi:</label>
+      <select name="keberlanjutan" required>
         <option value="">Pilih Nilai</option>
-        <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
-        <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
+        <option value="10">Sangat Baik (10)</option>
+        <option value="9">Baik (9)</option>
+        <option value="8">Cukup (8)</option>
+        <option value="7">Kurang (7)</option>
+      </select>
+
+      <label>Overall Score:</label>
+      <select name="overall" required>
+        <option value="">Pilih Nilai</option>
+        <option value="10">Sangat Baik (10)</option>
+        <option value="9">Baik (9)</option>
+        <option value="8">Cukup (8)</option>
+        <option value="7">Kurang (7)</option>
       </select>
 
       <label>Catatan:</label>
@@ -142,13 +153,35 @@
     const form = document.getElementById('form-juri');
     const popup = document.getElementById('status-popup');
     const submitBtn = document.getElementById('submit-btn');
+    const kategoriSelect = document.getElementById('kategori');
+    const timSelect = document.getElementById('tim');
 
+    // Update daftar tim sesuai kategori
+    kategoriSelect.addEventListener('change', function () {
+      const kategori = this.value;
+      timSelect.innerHTML = '<option value="">-- Pilih Tim --</option>';
+
+      let tims = [];
+      if (kategori === 'Innovation Project Rekind') {
+        tims = ['Tim Innovation Project Rekind 1', 'Tim Innovation Project Rekind 2', 'Tim Innovation Project Rekind 3'];
+      } else if (kategori === 'Innovation Project Anper') {
+        tims = ['Tim Innovation Project Anper 1', 'Tim Innovation Project Anper 2', 'Tim Innovation Project Anper 3'];
+      }
+
+      tims.forEach(tim => {
+        const opt = document.createElement('option');
+        opt.value = tim;
+        opt.textContent = tim;
+        timSelect.appendChild(opt);
+      });
+    });
+
+    // Handle submit
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       const data = new FormData(form);
-      const url = "https://script.google.com/macros/s/AKfycbwBr-WA7ZfrZiwl9aRLXt5sRqT9iy2c1WcBbcAvk1P9bI68mslLu3DqbaWbZRFZpGH4/exec"; // Ganti dengan URL GAS kamu
+      const url = "https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxx/exec"; // GANTI dgn URL milikmu
 
-      // Kunci tombol dan ubah teks
       submitBtn.disabled = true;
       submitBtn.textContent = "⏳ Mengirim...";
 
@@ -160,18 +193,15 @@
         });
 
         form.reset();
+        timSelect.innerHTML = '<option value="">-- Pilih Tim --</option>';
 
-        // Tampilkan popup sukses
         popup.style.display = "block";
-        setTimeout(() => {
-          popup.style.display = "none";
-        }, 4000);
+        setTimeout(() => { popup.style.display = "none"; }, 4000);
 
       } catch (err) {
         alert("Gagal mengirim data. Coba lagi.\n\n" + err.message);
       }
 
-      // Aktifkan kembali tombol
       submitBtn.disabled = false;
       submitBtn.textContent = "📤 Kirim";
     });
