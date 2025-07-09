@@ -85,18 +85,18 @@
 
       <label>Kategori:</label>
       <div class="checkbox-group" id="kategori-group">
-        <label><input type="checkbox" name="kategori" value="Innovation Project Rekind" required> Innovation Project Rekind</label>
+        <label><input type="checkbox" name="kategori" value="Innovation Project Rekind"> Innovation Project Rekind</label>
         <label><input type="checkbox" name="kategori" value="Innovation Project Anper"> Innovation Project Anper</label>
       </div>
 
       <label>Tim:</label>
       <div class="checkbox-group" id="tim-group">
-        <!-- Checkbox tim muncul dinamis -->
+        <!-- Tim akan muncul dinamis -->
       </div>
 
       <label>Presentasi:</label>
       <div class="checkbox-group">
-        <label><input type="checkbox" name="presentasi" value="10" required> Sangat Baik (10)</label>
+        <label><input type="checkbox" name="presentasi" value="10"> Sangat Baik (10)</label>
         <label><input type="checkbox" name="presentasi" value="9"> Baik (9)</label>
         <label><input type="checkbox" name="presentasi" value="8"> Cukup (8)</label>
         <label><input type="checkbox" name="presentasi" value="7"> Kurang (7)</label>
@@ -104,7 +104,7 @@
 
       <label>Peningkatan Revenue / Efisiensi / Produktivitas:</label>
       <div class="checkbox-group">
-        <label><input type="checkbox" name="revenue" value="10" required> Sangat Baik (10)</label>
+        <label><input type="checkbox" name="revenue" value="10"> Sangat Baik (10)</label>
         <label><input type="checkbox" name="revenue" value="9"> Baik (9)</label>
         <label><input type="checkbox" name="revenue" value="8"> Cukup (8)</label>
         <label><input type="checkbox" name="revenue" value="7"> Kurang (7)</label>
@@ -112,7 +112,7 @@
 
       <label>Pemanfaatan Digitalisasi:</label>
       <div class="checkbox-group">
-        <label><input type="checkbox" name="digital" value="10" required> Sangat Baik (10)</label>
+        <label><input type="checkbox" name="digital" value="10"> Sangat Baik (10)</label>
         <label><input type="checkbox" name="digital" value="9"> Baik (9)</label>
         <label><input type="checkbox" name="digital" value="8"> Cukup (8)</label>
         <label><input type="checkbox" name="digital" value="7"> Kurang (7)</label>
@@ -120,7 +120,7 @@
 
       <label>Keberlanjutan Inovasi:</label>
       <div class="checkbox-group">
-        <label><input type="checkbox" name="keberlanjutan" value="10" required> Sangat Baik (10)</label>
+        <label><input type="checkbox" name="keberlanjutan" value="10"> Sangat Baik (10)</label>
         <label><input type="checkbox" name="keberlanjutan" value="9"> Baik (9)</label>
         <label><input type="checkbox" name="keberlanjutan" value="8"> Cukup (8)</label>
         <label><input type="checkbox" name="keberlanjutan" value="7"> Kurang (7)</label>
@@ -148,26 +148,23 @@
     const timGroup = document.getElementById('tim-group');
     const overallInput = document.getElementById('overall');
 
-    const checkboxGroups = ['kategori','tim','presentasi','revenue','digital','keberlanjutan'];
-
-    // Batasi 1 checkbox aktif per group
-    function setupExclusive(name) {
+    const setupExclusive = (name) => {
       const boxes = document.querySelectorAll(`input[name="${name}"]`);
       boxes.forEach(box => {
         box.addEventListener('change', () => {
           if (box.checked) {
             boxes.forEach(b => { if (b !== box) b.checked = false; });
-            if (['presentasi','revenue','digital','keberlanjutan'].includes(name)) updateOverall();
+            updateOverall();
           } else {
-            if (['presentasi','revenue','digital','keberlanjutan'].includes(name)) updateOverall();
+            updateOverall();
           }
         });
       });
-    }
+    };
 
-    checkboxGroups.forEach(setupExclusive);
+    ['presentasi','revenue','digital','keberlanjutan'].forEach(setupExclusive);
 
-    // Tampilkan tim sesuai kategori
+    // Kategori dan tim dinamis
     kategoriGroup.querySelectorAll('input[type="checkbox"]').forEach(kat => {
       kat.addEventListener('change', () => {
         kategoriGroup.querySelectorAll('input[type="checkbox"]').forEach(k => { if (k !== kat) k.checked = false; });
@@ -179,7 +176,7 @@
             : ["Tim Innovation Project Anper 1", "Tim Innovation Project Anper 2", "Tim Innovation Project Anper 3"];
           tims.forEach(tim => {
             const lbl = document.createElement("label");
-            lbl.innerHTML = `<input type="checkbox" name="tim" value="${tim}" required> ${tim}`;
+            lbl.innerHTML = `<input type="checkbox" name="tim" value="${tim}"> ${tim}`;
             timGroup.appendChild(lbl);
           });
           setupExclusive("tim");
@@ -200,18 +197,17 @@
       overallInput.value = (count === 4) ? (total / 4).toFixed(1) : '';
     }
 
-    // Submit form
+    // Submit
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       submitBtn.disabled = true;
       submitBtn.textContent = "⏳ Mengirim...";
 
-      // Validasi manual per group
-      const requiredNames = ['kategori','tim','presentasi','revenue','digital','keberlanjutan'];
-      for (const name of requiredNames) {
-        const selected = document.querySelector(`input[name="${name}"]:checked`);
-        if (!selected) {
-          alert(`Silakan pilih salah satu opsi untuk: ${name}`);
+      const isChecked = name => document.querySelector(`input[name="${name}"]:checked`) !== null;
+      const requiredGroups = ['kategori','tim','presentasi','revenue','digital','keberlanjutan'];
+      for (const name of requiredGroups) {
+        if (!isChecked(name)) {
+          alert(`Silakan pilih salah satu untuk: ${name}`);
           submitBtn.disabled = false;
           submitBtn.textContent = "📤 Kirim";
           return;
@@ -219,7 +215,7 @@
       }
 
       const data = new FormData(form);
-      const url = "https://script.google.com/macros/s/AKfycbwBr-WA7ZfrZiwl9aRLXt5sRqT9iy2c1WcBbcAvk1P9bI68mslLu3DqbaWbZRFZpGH4/exec"; // Ganti dengan URL milikmu
+      const url = "https://script.google.com/macros/s/AKfycbwBr-WA7ZfrZiwl9aRLXt5sRqT9iy2c1WcBbcAvk1P9bI68mslLu3DqbaWbZRFZpGH4/exec"; // Ganti dengan URL script kamu
 
       try {
         await fetch(url, {
