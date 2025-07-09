@@ -4,63 +4,116 @@
     <base target="_top">
     <style>
       body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        max-width: 600px;
-        margin: auto;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(to right, #e3f2fd, #ffffff);
+        padding: 40px;
       }
-      h2 { color: #4CAF50; }
+
+      .form-container {
+        max-width: 600px;
+        background: #fff;
+        padding: 30px 40px;
+        margin: auto;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 16px;
+      }
+
+      h2 {
+        text-align: center;
+        color: #0d47a1;
+        margin-bottom: 30px;
+      }
+
+      label {
+        font-weight: 600;
+        margin-top: 12px;
+        display: block;
+      }
+
       input, select, textarea {
         width: 100%;
-        padding: 8px;
+        padding: 10px;
         margin-top: 6px;
         margin-bottom: 16px;
-        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
       }
+
       button {
-        background-color: #4CAF50;
+        background-color: #1976d2;
         color: white;
-        padding: 10px 20px;
+        padding: 12px;
+        width: 100%;
         border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
         cursor: pointer;
       }
+
       button:hover {
-        background-color: #45a049;
+        background-color: #1565c0;
+      }
+
+      .thanks {
+        background: #c8e6c9;
+        color: #2e7d32;
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      a {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #1565c0;
+      }
+
+      a:hover {
+        text-decoration: underline;
       }
     </style>
   </head>
   <body>
-    <h2>Form Penjurian</h2>
-    <form method="post" action="<?= ScriptApp.getService().getUrl() ?>">
-      <label for="nama">Nama Juri:</label>
-      <input type="text" id="nama" name="nama" required>
+    <div class="form-container">
+      <h2>📝 Form Penjurian</h2>
+      <form method="post" action="<?= ScriptApp.getService().getUrl() ?>">
+        <label for="nama">Nama Juri:</label>
+        <input type="text" id="nama" name="nama" required>
 
-      <label for="kategori">Kategori:</label>
-      <select id="kategori" name="kategori" required>
-        <option value="Desain">Desain</option>
-        <option value="Inovasi">Inovasi</option>
-        <option value="Teknologi">Teknologi</option>
-      </select>
+        <label for="kategori">Kategori:</label>
+        <select id="kategori" name="kategori" required>
+          <option value="">-- Pilih Kategori --</option>
+          <option value="Desain">Desain</option>
+          <option value="Inovasi">Inovasi</option>
+          <option value="Teknologi">Teknologi</option>
+        </select>
 
-      <label>Kriteria 1:</label>
-      <input type="number" name="k1" min="1" max="10" required>
+        <label>Kriteria 1:</label>
+        <input type="number" name="k1" min="1" max="10" required>
 
-      <label>Kriteria 2:</label>
-      <input type="number" name="k2" min="1" max="10" required>
+        <label>Kriteria 2:</label>
+        <input type="number" name="k2" min="1" max="10" required>
 
-      <label>Kriteria 3:</label>
-      <input type="number" name="k3" min="1" max="10" required>
+        <label>Kriteria 3:</label>
+        <input type="number" name="k3" min="1" max="10" required>
 
-      <label>Kriteria 4:</label>
-      <input type="number" name="k4" min="1" max="10" required>
+        <label>Kriteria 4:</label>
+        <input type="number" name="k4" min="1" max="10" required>
 
-      <label>Kriteria 5:</label>
-      <input type="number" name="k5" min="1" max="10" required>
+        <label>Kriteria 5:</label>
+        <input type="number" name="k5" min="1" max="10" required>
 
-      <label>Catatan:</label>
-      <textarea name="catatan" rows="4"></textarea>
+        <label>Catatan:</label>
+        <textarea name="catatan" rows="4" placeholder="Tambahkan catatan penilaian..."></textarea>
 
-      <button type="submit">Kirim Penilaian</button>
-    </form>
+        <button type="submit">📤 Kirim Penilaian</button>
+      </form>
+    </div>
   </body>
 </html>
