@@ -48,14 +48,26 @@
     button:hover {
       background-color: #33691e;
     }
-    .success {
-      margin-top: 20px;
-      padding: 12px;
+
+    /* Popup notification */
+    .popup-success {
+      position: fixed;
+      top: 20px;
+      right: 20px;
       background-color: #c8e6c9;
       color: #2e7d32;
+      padding: 12px 20px;
       border-radius: 8px;
-      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      font-weight: bold;
       display: none;
+      z-index: 9999;
+      animation: fadein 0.3s ease-out;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -114,37 +126,36 @@
 
       <button type="submit">📤 Kirim</button>
     </form>
+  </div>
 
-    <div id="status" class="success">
-      ✅ Penilaian berhasil dikirim!
-    </div>
+  <!-- Popup -->
+  <div id="status-popup" class="popup-success">
+    ✅ Penilaian berhasil dikirim!
   </div>
 
   <script>
     const form = document.getElementById('form-juri');
-    const status = document.getElementById('status');
+    const popup = document.getElementById('status-popup');
 
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       const data = new FormData(form);
-      const url = "https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxx/exec"; // Ganti dengan URL Apps Script kamu
+      const url = "https://script.google.com/macros/s/AKfycbwBr-WA7ZfrZiwl9aRLXt5sRqT9iy2c1WcBbcAvk1P9bI68mslLu3DqbaWbZRFZpGH4/exec"; // Ganti dengan URL GAS kamu
 
       try {
         const res = await fetch(url, {
           method: "POST",
-          mode: "no-cors", // penting untuk Google Apps Script
+          mode: "no-cors",
           body: data
         });
 
-        // Tampilkan pesan sukses
-        status.style.display = "block";
         form.reset();
-        window.scrollTo(0, 0); // scroll ke atas
 
-        // Sembunyikan lagi setelah 5 detik
+        // Tampilkan popup
+        popup.style.display = "block";
         setTimeout(() => {
-          status.style.display = "none";
-        }, 5000);
+          popup.style.display = "none";
+        }, 4000);
 
       } catch (err) {
         alert("Gagal mengirim data. Coba lagi.\n\n" + err.message);
