@@ -34,11 +34,11 @@
       border-radius: 8px;
       border: 1px solid #ccc;
     }
-    .checkbox-group {
+    .radio-group {
       margin-top: 8px;
       margin-bottom: 12px;
     }
-    .checkbox-group label {
+    .radio-group label {
       display: block;
       font-weight: normal;
       margin-top: 4px;
@@ -84,46 +84,44 @@
       <input type="text" name="nama" required />
 
       <label>Kategori:</label>
-      <div class="checkbox-group" id="kategori-group">
-        <label><input type="checkbox" name="kategori" value="Innovation Project Rekind"> Innovation Project Rekind</label>
-        <label><input type="checkbox" name="kategori" value="Innovation Project Anper"> Innovation Project Anper</label>
+      <div class="radio-group">
+        <label><input type="radio" name="kategori" value="Innovation Project Rekind" required> Innovation Project Rekind</label>
+        <label><input type="radio" name="kategori" value="Innovation Project Anper"> Innovation Project Anper</label>
       </div>
 
       <label>Tim:</label>
-      <div class="checkbox-group" id="tim-group">
-        <!-- Tim akan muncul dinamis -->
-      </div>
+      <div class="radio-group" id="tim-group"></div>
 
       <label>Presentasi:</label>
-      <div class="checkbox-group">
-        <label><input type="checkbox" name="presentasi" value="10"> Sangat Baik (10)</label>
-        <label><input type="checkbox" name="presentasi" value="9"> Baik (9)</label>
-        <label><input type="checkbox" name="presentasi" value="8"> Cukup (8)</label>
-        <label><input type="checkbox" name="presentasi" value="7"> Kurang (7)</label>
+      <div class="radio-group">
+        <label><input type="radio" name="presentasi" value="10" required> Sangat Baik (10)</label>
+        <label><input type="radio" name="presentasi" value="9"> Baik (9)</label>
+        <label><input type="radio" name="presentasi" value="8"> Cukup (8)</label>
+        <label><input type="radio" name="presentasi" value="7"> Kurang (7)</label>
       </div>
 
       <label>Peningkatan Revenue / Efisiensi / Produktivitas:</label>
-      <div class="checkbox-group">
-        <label><input type="checkbox" name="revenue" value="10"> Sangat Baik (10)</label>
-        <label><input type="checkbox" name="revenue" value="9"> Baik (9)</label>
-        <label><input type="checkbox" name="revenue" value="8"> Cukup (8)</label>
-        <label><input type="checkbox" name="revenue" value="7"> Kurang (7)</label>
+      <div class="radio-group">
+        <label><input type="radio" name="revenue" value="10" required> Sangat Baik (10)</label>
+        <label><input type="radio" name="revenue" value="9"> Baik (9)</label>
+        <label><input type="radio" name="revenue" value="8"> Cukup (8)</label>
+        <label><input type="radio" name="revenue" value="7"> Kurang (7)</label>
       </div>
 
       <label>Pemanfaatan Digitalisasi:</label>
-      <div class="checkbox-group">
-        <label><input type="checkbox" name="digital" value="10"> Sangat Baik (10)</label>
-        <label><input type="checkbox" name="digital" value="9"> Baik (9)</label>
-        <label><input type="checkbox" name="digital" value="8"> Cukup (8)</label>
-        <label><input type="checkbox" name="digital" value="7"> Kurang (7)</label>
+      <div class="radio-group">
+        <label><input type="radio" name="digital" value="10" required> Sangat Baik (10)</label>
+        <label><input type="radio" name="digital" value="9"> Baik (9)</label>
+        <label><input type="radio" name="digital" value="8"> Cukup (8)</label>
+        <label><input type="radio" name="digital" value="7"> Kurang (7)</label>
       </div>
 
       <label>Keberlanjutan Inovasi:</label>
-      <div class="checkbox-group">
-        <label><input type="checkbox" name="keberlanjutan" value="10"> Sangat Baik (10)</label>
-        <label><input type="checkbox" name="keberlanjutan" value="9"> Baik (9)</label>
-        <label><input type="checkbox" name="keberlanjutan" value="8"> Cukup (8)</label>
-        <label><input type="checkbox" name="keberlanjutan" value="7"> Kurang (7)</label>
+      <div class="radio-group">
+        <label><input type="radio" name="keberlanjutan" value="10" required> Sangat Baik (10)</label>
+        <label><input type="radio" name="keberlanjutan" value="9"> Baik (9)</label>
+        <label><input type="radio" name="keberlanjutan" value="8"> Cukup (8)</label>
+        <label><input type="radio" name="keberlanjutan" value="7"> Kurang (7)</label>
       </div>
 
       <label>Overall Score:</label>
@@ -144,47 +142,26 @@
     const form = document.getElementById('form-juri');
     const popup = document.getElementById('status-popup');
     const submitBtn = document.getElementById('submit-btn');
-    const kategoriGroup = document.getElementById('kategori-group');
-    const timGroup = document.getElementById('tim-group');
     const overallInput = document.getElementById('overall');
 
-    const setupExclusive = (name) => {
-      const boxes = document.querySelectorAll(`input[name="${name}"]`);
-      boxes.forEach(box => {
-        box.addEventListener('change', () => {
-          if (box.checked) {
-            boxes.forEach(b => { if (b !== box) b.checked = false; });
-            updateOverall();
-          } else {
-            updateOverall();
-          }
-        });
-      });
-    };
+    const kategoriRadios = document.querySelectorAll('input[name="kategori"]');
+    const timGroup = document.getElementById('tim-group');
 
-    ['presentasi','revenue','digital','keberlanjutan'].forEach(setupExclusive);
-
-    // Kategori dan tim dinamis
-    kategoriGroup.querySelectorAll('input[type="checkbox"]').forEach(kat => {
+    kategoriRadios.forEach(kat => {
       kat.addEventListener('change', () => {
-        kategoriGroup.querySelectorAll('input[type="checkbox"]').forEach(k => { if (k !== kat) k.checked = false; });
         timGroup.innerHTML = '';
+        const tims = kat.value.includes("Rekind")
+          ? ["Tim Innovation Project Rekind 1", "Tim Innovation Project Rekind 2", "Tim Innovation Project Rekind 3"]
+          : ["Tim Innovation Project Anper 1", "Tim Innovation Project Anper 2", "Tim Innovation Project Anper 3"];
 
-        if (kat.checked) {
-          const tims = kat.value.includes("Rekind")
-            ? ["Tim Innovation Project Rekind 1", "Tim Innovation Project Rekind 2", "Tim Innovation Project Rekind 3"]
-            : ["Tim Innovation Project Anper 1", "Tim Innovation Project Anper 2", "Tim Innovation Project Anper 3"];
-          tims.forEach(tim => {
-            const lbl = document.createElement("label");
-            lbl.innerHTML = `<input type="checkbox" name="tim" value="${tim}"> ${tim}`;
-            timGroup.appendChild(lbl);
-          });
-          setupExclusive("tim");
-        }
+        tims.forEach(tim => {
+          const lbl = document.createElement("label");
+          lbl.innerHTML = `<input type="radio" name="tim" value="${tim}" required> ${tim}`;
+          timGroup.appendChild(lbl);
+        });
       });
     });
 
-    // Hitung skor rata-rata
     function updateOverall() {
       let total = 0, count = 0;
       ['presentasi','revenue','digital','keberlanjutan'].forEach(name => {
@@ -197,25 +174,17 @@
       overallInput.value = (count === 4) ? (total / 4).toFixed(1) : '';
     }
 
-    // Submit
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', updateOverall);
+    });
+
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       submitBtn.disabled = true;
       submitBtn.textContent = "⏳ Mengirim...";
 
-      const isChecked = name => document.querySelector(`input[name="${name}"]:checked`) !== null;
-      const requiredGroups = ['kategori','tim','presentasi','revenue','digital','keberlanjutan'];
-      for (const name of requiredGroups) {
-        if (!isChecked(name)) {
-          alert(`Silakan pilih salah satu untuk: ${name}`);
-          submitBtn.disabled = false;
-          submitBtn.textContent = "📤 Kirim";
-          return;
-        }
-      }
-
       const data = new FormData(form);
-      const url = "https://script.google.com/macros/s/AKfycbycSycH8GN7d_qvBnsrbKj6Tn3IVbEm-YeC7NLZG_otB5rsuSf7nuPkXsu7pWmphjyf/exec"; // Ganti dengan URL script kamu
+      const url = "https://script.google.com/macros/s/AKfycbycSycH8GN7d_qvBnsrbKj6Tn3IVbEm-YeC7NLZG_otB5rsuSf7nuPkXsu7pWmphjyf/exec";
 
       try {
         await fetch(url, {
