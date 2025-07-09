@@ -11,7 +11,7 @@
       padding: 40px;
     }
     .container {
-      max-width: 700px;
+      max-width: 720px;
       background: white;
       padding: 30px 40px;
       margin: auto;
@@ -27,7 +27,7 @@
       margin-top: 14px;
       font-weight: bold;
     }
-    select, input, textarea {
+    input[type="text"], textarea {
       width: 100%;
       padding: 10px;
       margin-top: 4px;
@@ -36,11 +36,12 @@
     }
     .checkbox-group {
       margin-top: 8px;
+      margin-bottom: 12px;
     }
     .checkbox-group label {
-      display: inline-block;
-      margin-right: 15px;
+      display: block;
       font-weight: normal;
+      margin-top: 4px;
     }
     button {
       margin-top: 20px;
@@ -83,18 +84,16 @@
       <input type="text" name="nama" required />
 
       <label>Kategori:</label>
-      <select name="kategori" id="kategori" required>
-        <option value="">-- Pilih Kategori --</option>
-        <option value="Innovation Project Rekind">Innovation Project Rekind</option>
-        <option value="Innovation Project Anper">Innovation Project Anper</option>
-      </select>
+      <div class="checkbox-group" id="kategori-group">
+        <label><input type="checkbox" name="kategori" value="Innovation Project Rekind" required> Innovation Project Rekind</label>
+        <label><input type="checkbox" name="kategori" value="Innovation Project Anper"> Innovation Project Anper</label>
+      </div>
 
       <label>Tim:</label>
-      <select name="tim" id="tim" required>
-        <option value="">-- Pilih Tim --</option>
-      </select>
+      <div class="checkbox-group" id="tim-group">
+        <!-- Checkbox tim akan muncul dinamis -->
+      </div>
 
-      <!-- Kriteria dengan checkbox -->
       <label>Presentasi:</label>
       <div class="checkbox-group">
         <label><input type="checkbox" name="presentasi" value="10" required> Sangat Baik (10)</label>
@@ -137,7 +136,6 @@
     </form>
   </div>
 
-  <!-- Popup -->
   <div id="status-popup" class="popup-success">
     ✅ Penilaian berhasil dikirim!
   </div>
@@ -146,32 +144,41 @@
     const form = document.getElementById('form-juri');
     const popup = document.getElementById('status-popup');
     const submitBtn = document.getElementById('submit-btn');
-    const kategoriSelect = document.getElementById('kategori');
-    const timSelect = document.getElementById('tim');
+    const kategoriGroup = document.getElementById('kategori-group');
+    const timGroup = document.getElementById('tim-group');
     const overallInput = document.getElementById('overall');
 
-    // Tim dinamis berdasarkan kategori
-    kategoriSelect.addEventListener('change', function () {
-      const kategori = this.value;
-      timSelect.innerHTML = '<option value="">-- Pilih Tim --</option>';
-      let tims = [];
-
-      if (kategori === 'Innovation Project Rekind') {
-        tims = ['Tim Innovation Project Rekind 1', 'Tim Innovation Project Rekind 2', 'Tim Innovation Project Rekind 3'];
-      } else if (kategori === 'Innovation Project Anper') {
-        tims = ['Tim Innovation Project Anper 1', 'Tim Innovation Project Anper 2', 'Tim Innovation Project Anper 3'];
-      }
-
-      tims.forEach(tim => {
-        const opt = document.createElement('option');
-        opt.value = tim;
-        opt.textContent = tim;
-        timSelect.appendChild(opt);
+    // Kategori: hanya satu bisa dicentang
+    const kategoriCheckboxes = kategoriGroup.querySelectorAll('input[type="checkbox"]');
+    kategoriCheckboxes.forEach(kat => {
+      kat.addEventListener('change', () => {
+        kategoriCheckboxes.forEach(k => { if (k !== kat) k.checked = false; });
+        // generate tim
+        timGroup.innerHTML = '';
+        if (kat.checked) {
+          let tims = kat.value.includes("Rekind")
+            ? ["Tim Innovation Project Rekind 1", "Tim Innovation Project Rekind 2", "Tim Innovation Project Rekind 3"]
+            : ["Tim Innovation Project Anper 1", "Tim Innovation Project Anper 2", "Tim Innovation Project Anper 3"];
+          tims.forEach(tim => {
+            const lbl = document.createElement("label");
+            lbl.innerHTML = `<input type="checkbox" name="tim" value="${tim}" required> ${tim}`;
+            timGroup.appendChild(lbl);
+          });
+          // buat validasi 1 saja di tim
+          setTimeout(() => {
+            const timChecks = timGroup.querySelectorAll('input[type="checkbox"]');
+            timChecks.forEach(t1 => {
+              t1.addEventListener('change', () => {
+                timChecks.forEach(t2 => { if (t2 !== t1) t2.checked = false; });
+              });
+            });
+          }, 50);
+        }
       });
     });
 
-    // Batasi 1 checkbox per kriteria
-    ['presentasi', 'revenue', 'digital', 'keberlanjutan'].forEach(name => {
+    // Kriteria: hanya satu checkbox boleh aktif
+    ['presentasi','revenue','digital','keberlanjutan'].forEach(name => {
       const boxes = document.querySelectorAll(`input[name="${name}"]`);
       boxes.forEach(box => {
         box.addEventListener('change', () => {
@@ -185,25 +192,25 @@
       });
     });
 
-    // Hitung overall
+    // Hitung skor rata-rata
     function updateOverall() {
       let total = 0;
       let count = 0;
-      ['presentasi', 'revenue', 'digital', 'keberlanjutan'].forEach(name => {
-        const checked = document.querySelector(`input[name="${name}"]:checked`);
-        if (checked) {
-          total += parseInt(checked.value);
+      ['presentasi','revenue','digital','keberlanjutan'].forEach(name => {
+        const val = document.querySelector(`input[name="${name}"]:checked`);
+        if (val) {
+          total += parseInt(val.value);
           count++;
         }
       });
       if (count === 4) overallInput.value = (total / 4).toFixed(1);
     }
 
-    // Submit form
+    // Submit
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       const data = new FormData(form);
-      const url = "https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxx/exec"; // Ganti dengan URL milikmu
+      const url = "https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxx/exec"; // Ganti dgn milikmu
 
       submitBtn.disabled = true;
       submitBtn.textContent = "⏳ Mengirim...";
@@ -216,12 +223,10 @@
         });
 
         form.reset();
-        timSelect.innerHTML = '<option value="">-- Pilih Tim --</option>';
+        timGroup.innerHTML = '';
         overallInput.value = '';
-
         popup.style.display = "block";
         setTimeout(() => popup.style.display = "none", 4000);
-
       } catch (err) {
         alert("Gagal mengirim data. Coba lagi.\n\n" + err.message);
       }
