@@ -45,8 +45,12 @@
       font-size: 16px;
       cursor: pointer;
     }
-    button:hover {
+    button:hover:enabled {
       background-color: #33691e;
+    }
+    button:disabled {
+      background-color: #a5d6a7;
+      cursor: not-allowed;
     }
 
     /* Popup notification */
@@ -86,6 +90,7 @@
         <option value="Teknologi">Teknologi</option>
       </select>
 
+      <!-- Kriteria -->
       <label>Nilai Kriteria 1 (10–100):</label>
       <select name="k1" required>
         <option value="">Pilih Nilai</option>
@@ -124,7 +129,7 @@
       <label>Catatan:</label>
       <textarea name="catatan" rows="4"></textarea>
 
-      <button type="submit">📤 Kirim</button>
+      <button type="submit" id="submit-btn">📤 Kirim</button>
     </form>
   </div>
 
@@ -136,14 +141,19 @@
   <script>
     const form = document.getElementById('form-juri');
     const popup = document.getElementById('status-popup');
+    const submitBtn = document.getElementById('submit-btn');
 
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       const data = new FormData(form);
-      const url = "https://script.google.com/macros/s/AKfycbwBr-WA7ZfrZiwl9aRLXt5sRqT9iy2c1WcBbcAvk1P9bI68mslLu3DqbaWbZRFZpGH4/exec"; // Ganti dengan URL GAS kamu
+      const url = "https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxx/exec"; // Ganti dengan URL GAS kamu
+
+      // Kunci tombol dan ubah teks
+      submitBtn.disabled = true;
+      submitBtn.textContent = "⏳ Mengirim...";
 
       try {
-        const res = await fetch(url, {
+        await fetch(url, {
           method: "POST",
           mode: "no-cors",
           body: data
@@ -151,7 +161,7 @@
 
         form.reset();
 
-        // Tampilkan popup
+        // Tampilkan popup sukses
         popup.style.display = "block";
         setTimeout(() => {
           popup.style.display = "none";
@@ -160,6 +170,10 @@
       } catch (err) {
         alert("Gagal mengirim data. Coba lagi.\n\n" + err.message);
       }
+
+      // Aktifkan kembali tombol
+      submitBtn.disabled = false;
+      submitBtn.textContent = "📤 Kirim";
     });
   </script>
 </body>
