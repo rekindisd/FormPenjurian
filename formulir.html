@@ -1,139 +1,144 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <base target="_top">
-    <style>
-      body {
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(to right, #e3f2fd, #ffffff);
-        padding: 40px;
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Form Penjurian</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4c3;
+      padding: 40px;
+    }
+    .container {
+      max-width: 600px;
+      background: white;
+      padding: 30px 40px;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+    h2 {
+      color: #33691e;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 14px;
+      font-weight: bold;
+    }
+    select, input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 4px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      background-color: #558b2f;
+      color: white;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #33691e;
+    }
+    .success {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #c8e6c9;
+      color: #2e7d32;
+      border-radius: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📝 Form Penjurian</h2>
+    <form id="form-juri">
+      <label>Nama Juri:</label>
+      <input type="text" name="nama" required />
+
+      <label>Kategori:</label>
+      <select name="kategori" required>
+        <option value="">-- Pilih Kategori --</option>
+        <option value="Desain">Desain</option>
+        <option value="Inovasi">Inovasi</option>
+        <option value="Teknologi">Teknologi</option>
+      </select>
+
+      <!-- Kriteria 1 - 5 -->
+      <label>Nilai Kriteria 1 (10–100):</label>
+      <select name="k1" required>
+        <option value="">Pilih Nilai</option>
+        <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
+        <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
+      </select>
+
+      <label>Nilai Kriteria 2 (10–100):</label>
+      <select name="k2" required>
+        <option value="">Pilih Nilai</option>
+        <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
+        <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
+      </select>
+
+      <label>Nilai Kriteria 3 (10–100):</label>
+      <select name="k3" required>
+        <option value="">Pilih Nilai</option>
+        <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
+        <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
+      </select>
+
+      <label>Nilai Kriteria 4 (10–100):</label>
+      <select name="k4" required>
+        <option value="">Pilih Nilai</option>
+        <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
+        <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
+      </select>
+
+      <label>Nilai Kriteria 5 (10–100):</label>
+      <select name="k5" required>
+        <option value="">Pilih Nilai</option>
+        <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
+        <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
+      </select>
+
+      <label>Catatan:</label>
+      <textarea name="catatan" rows="4"></textarea>
+
+      <button type="submit">📤 Kirim</button>
+    </form>
+    <div id="status" class="success" style="display:none">✅ Terkirim!</div>
+  </div>
+
+  <script>
+    const form = document.getElementById('form-juri');
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const data = new FormData(form);
+      const url = "https://script.google.com/macros/s/AKfycbxBOQOePQ9HdbkEr4D4qaCdXVJiTFnlUOV005RYb4cn2CiqEc3lyymbIhgRCsu8LBk1/exec"; // Ganti dengan GAS URL
+
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          body: data
+        });
+        if (res.ok) {
+          document.getElementById("status").style.display = "block";
+          form.reset();
+        } else {
+          alert("Gagal mengirim data.");
+        }
+      } catch (err) {
+        alert("Error: " + err.message);
       }
-
-      .form-container {
-        max-width: 600px;
-        background: #fff;
-        padding: 30px 40px;
-        margin: auto;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        border-radius: 16px;
-      }
-
-      h2 {
-        text-align: center;
-        color: #0d47a1;
-        margin-bottom: 30px;
-      }
-
-      label {
-        font-weight: 600;
-        margin-top: 12px;
-        display: block;
-      }
-
-      select, input, textarea {
-        width: 100%;
-        padding: 10px;
-        margin-top: 6px;
-        margin-bottom: 16px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 14px;
-      }
-
-      button {
-        background-color: #1976d2;
-        color: white;
-        padding: 12px;
-        width: 100%;
-        border: none;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
-      button:hover {
-        background-color: #1565c0;
-      }
-
-      .thanks {
-        background: #c8e6c9;
-        color: #2e7d32;
-        padding: 20px;
-        text-align: center;
-        border-radius: 10px;
-        font-weight: bold;
-        font-size: 18px;
-      }
-
-      a {
-        display: block;
-        text-align: center;
-        margin-top: 20px;
-        text-decoration: none;
-        color: #1565c0;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="form-container">
-      <h2>📝 Form Penjurian</h2>
-      <form method="post" action="<?= ScriptApp.getService().getUrl() ?>">
-        <label for="nama">Nama Juri:</label>
-        <input type="text" id="nama" name="nama" required>
-
-        <label for="kategori">Kategori:</label>
-        <select id="kategori" name="kategori" required>
-          <option value="">-- Pilih Kategori --</option>
-          <option value="Desain">Desain</option>
-          <option value="Inovasi">Inovasi</option>
-          <option value="Teknologi">Teknologi</option>
-        </select>
-
-        <label>Nilai Kriteria 1 (10–100):</label>
-        <select name="k1" required>
-          <option value="">Pilih Nilai</option>
-          <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
-          <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
-        </select>
-
-        <label>Nilai Kriteria 2 (10–100):</label>
-        <select name="k2" required>
-          <option value="">Pilih Nilai</option>
-          <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
-          <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
-        </select>
-
-        <label>Nilai Kriteria 3 (10–100):</label>
-        <select name="k3" required>
-          <option value="">Pilih Nilai</option>
-          <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
-          <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
-        </select>
-
-        <label>Nilai Kriteria 4 (10–100):</label>
-        <select name="k4" required>
-          <option value="">Pilih Nilai</option>
-          <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
-          <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
-        </select>
-
-        <label>Nilai Kriteria 5 (10–100):</label>
-        <select name="k5" required>
-          <option value="">Pilih Nilai</option>
-          <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
-          <option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
-        </select>
-
-        <label>Catatan:</label>
-        <textarea name="catatan" rows="4" placeholder="Tambahkan catatan penilaian..."></textarea>
-
-        <button type="submit">📤 Kirim Penilaian</button>
-      </form>
-    </div>
-  </body>
+    });
+  </script>
+</body>
 </html>
